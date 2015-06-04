@@ -16,15 +16,29 @@ class ViewController: UIViewController {
     var thirdContainer: UIView!
     var fourthContainer: UIView!
     
+    var titleLabel: UILabel!
+    
     //this is creating a UIView in code rather than in the storyboard. These constants are global
     //lowercase k means a constant - recognise as a constant
     let kMarginForView:CGFloat = 10.0 //gives a 10 point margin
+    let kMarginForSlot:CGFloat = 2.0
+    
     let KSixth:CGFloat = 1.0/6.0
+    let kThird:CGFloat = 1.0/3.0 //this is specifying the width?
+    
+    //new constants for the secondContainerView
+    let kNumberOfContainers = 3 //3 columns
+    let kNumberOfSlots = 3 //3 rows
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         setUpContainerViews()
+        setUpFirstContainer(self.firstContainer)
+        setUpSecondContainer(self.secondContainer)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,4 +76,33 @@ class ViewController: UIViewController {
         
         
 }
+    //creates a new UILabel, styles it and places the label on the container
+    func setUpFirstContainer(containerView: UIView) {
+        self.titleLabel = UILabel()
+        self.titleLabel.text = "Super Slots"
+        self.titleLabel.textColor = UIColor.yellowColor()
+        self.titleLabel.font = UIFont(name: "MarkerFelt-Wide", size: 40)
+        //makes the label the right size to accomodate the size and font
+        self.titleLabel.sizeToFit()
+        // centered relative to the superview
+        self.titleLabel.center = containerView.center
+    //adds the containerView to the current view
+        containerView.addSubview(self.titleLabel)
+    }
+    
+    func setUpSecondContainer(containerView: UIView) {
+        // the outside for loop will run three times and each time it runs the inside loop will also run three times
+        // there are three containers and 3 slots
+        for var containerNumber = 0; containerNumber < kNumberOfContainers; ++containerNumber {
+            for var slotNumber = 0; slotNumber < kNumberOfSlots; ++slotNumber {
+               var slotImageView = UIImageView() //this is a local instance not a property
+                slotImageView.backgroundColor = UIColor.yellowColor()
+                slotImageView.frame = CGRect(x: containerView.bounds.origin.x + (containerView.bounds.size.width * CGFloat(containerNumber) * kThird), y: containerView.bounds.origin.y + (containerView.bounds.size.height * CGFloat(slotNumber) * kThird), width: containerView.bounds.width * kThird - kMarginForSlot, height: containerView.bounds.height * kThird - kMarginForSlot)
+                containerView.addSubview(slotImageView)
+                
+            }
+        }
+    }
 }
+
+
