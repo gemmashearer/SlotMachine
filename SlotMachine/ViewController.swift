@@ -273,7 +273,7 @@ class ViewController: UIViewController {
             self.spinButton.backgroundColor = UIColor.greenColor()
             self.spinButton.sizeToFit()
             self.spinButton.center = CGPoint(x: containerView.frame.width * 7 * kEighth, y: containerView.frame.height * kHalf)
-            self.spinButton.addTarget(self, action: "spinButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+            self.spinButton.addTarget(self, action: "spinButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             containerView.addSubview(self.spinButton)
             
             
