@@ -213,24 +213,7 @@ class ViewController: UIViewController {
         self.winnerPaidTitleLabel.center = CGPoint(x: containerView.frame.width * 5 * KSixth, y: containerView.frame.height * 2 * kThird)
         
         containerView.addSubview(self.winnerPaidTitleLabel)
-        
-        //fourth container = setting up a button programatically - i.e. not using the IBAction
-//        
-//    func setUpFourthContainer(containerView: UIView) {
-//            //this is making the class UIButton
-//            self.resetButton = UIButton()
-//            self.resetButton.setTitle("Reset", forState: UIControlState.Normal) //the control state determines when the label will be shown
-//            self.resetButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-//            //? is needed because this is an optional -  there might not be a title label
-//            self.resetButton.titleLabel?.font = UIFont(name: "Superclarendon-Bold", size: 12)
-//            self.resetButton.backgroundColor = UIColor.lightGrayColor()
-//            self.resetButton.sizeToFit()
-//            self.resetButton.center = CGPoint(x: containerView.frame.width * kEighth, y: containerView.frame.height * kHalf)
-//            //adding a target = self (i.e. this viewController - allows us to access properties and functions inside the viewcontroller. The colon is important. resetButtonPressed is a function. TouchUpInside - for all IBACtions = default
-//            self.resetButton.addTarget(self, action: "resetButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
-//            containerView.addSubview(self.resetButton)
-//            
-//            
+
      }
 //        
         func setupFourthContainer (containerView: UIView) {
@@ -273,6 +256,7 @@ class ViewController: UIViewController {
             self.spinButton.backgroundColor = UIColor.greenColor()
             self.spinButton.sizeToFit()
             self.spinButton.center = CGPoint(x: containerView.frame.width * 7 * kEighth, y: containerView.frame.height * kHalf)
+            //the colon that I keep forgetting tells Xcode that the selector takes a parameter
             self.spinButton.addTarget(self, action: "spinButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             containerView.addSubview(self.spinButton)
             
