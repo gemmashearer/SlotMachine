@@ -37,6 +37,12 @@ class ViewController: UIViewController {
     //giving access to the slots array which holds Slot instances 
     
     var slots: [[Slot]] = []
+    
+    //stats - kep track of bets, credits and winnings
+    var credits = 0
+    var currentBet = 0
+    var winnings = 0
+    
     //this is creating a UIView in code rather than in the storyboard. These constants are global
     //lowercase k means a constant - recognise as a constant
     let kMarginForView:CGFloat = 10.0 //gives a 10 point margin
@@ -59,9 +65,10 @@ class ViewController: UIViewController {
         setUpContainerViews()
         //the self.secondContainer etc links the code to the correct container
         setUpFirstContainer(self.firstContainer)
-        setUpSecondContainer(self.secondContainer)
         setUpThirdContainer(self.thirdContainer)
         setupFourthContainer(self.fourthContainer)
+        //instead of secondContainer call hardReset
+        hardReset()
         
     }
 
@@ -74,20 +81,52 @@ class ViewController: UIViewController {
     
     //this function runs when the reset button is pressed
     func resetButtonPressed (button: UIButton) {
+        hardReset()
         
     }
     
     func betOneButtonPressed (button: UIButton) {
+        
+        if credits <= 0 {
+            showAlertWithText(header: "No More Credits", message: "Reset Game")
+        } else {
+            if currentBet < 5 {
+                currentBet += 1
+                credits -= 1
+                updateMainView()
+            }
+            else {
+                showAlertWithText(message: "You can only bet 5 credits at a time")
+            }
+        }
+        
       
     }
     
-    func betMaxButtonPressed (UIButton) {
+    func betMaxButtonPressed (button: UIButton) {
+        //checking that the user has at least enough credits to bet the max, which is 5
+        if credits <= 5 {
+            showAlertWithText(header: "Not Enough Credits", message: "Bet Less")
+        } else {
+            if currentBet < 5 {
+                var creditsToBetMax = 5 - currentBet
+                credits -= creditsToBetMax //updates the credits
+                currentBet += creditsToBetMax //updates the bet
+                updateMainView() //updates the labels
+                
+            } else {
+                showAlertWithText(message: "You can only bet 5 credits at a time")
+            }
+        }
     
     }
      //will get new slots and set up the second container every time the button is pressed
     func spinButtonPressed (UIButton) {
+        //remove slot image views before calling new ones
+        removeSlotImageViews()
         slots = Factory.createSlots()
         setUpSecondContainer(self.secondContainer)
+        
     }
     
     func setUpContainerViews() {
@@ -170,7 +209,7 @@ class ViewController: UIViewController {
         self.creditsLabel = UILabel()
         self.creditsLabel.text = "00000"
         self.creditsLabel.textColor = UIColor.redColor()
-        self.creditsLabel.font = UIFont(name: "Meno-Bold", size: 16)
+        self.creditsLabel.font = UIFont(name: "Menlo-Bold", size: 16)
         //need to set the font before calling sizeToFit
         self.creditsLabel.sizeToFit()
         //.frame is making it relative to the superview
@@ -279,18 +318,53 @@ class ViewController: UIViewController {
             //the colon that I keep forgetting tells Xcode that the selector takes a parameter
             self.spinButton.addTarget(self, action: "spinButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             containerView.addSubview(self.spinButton)
+        }
+        //helper function to remove old image views before it displays new ones
+        func removeSlotImageViews () {
+            if self.secondContainer != nil {
+                //make this an optional so that we can iterate over all of the subviews
+                let container: UIView? = self.secondContainer
+                let subViews:Array? = container!.subviews //slots
+                for view in subViews! {
+                    //will remove all of the subviews i.e. the slots added to the second container
+                    view.removeFromSuperview()//superview is the second Container
+                }
+            }
+        }
+        //function to completely reset everything
+    
+        func hardReset () {
+            removeSlotImageViews()
+            //keep capacity because will will be removing slots but then addingt the same number again
+            slots.removeAll(keepCapacity: true)
+            self.setUpSecondContainer(self.secondContainer)
+            //default stats called by hard resets.self could be used because these are properties
+            credits = 50
+            winnings = 0
+            currentBet = 0
             
-            
-
-            
-            
-            
+            //calling the function to update the labels
+            updateMainView()
+    }
+    
+        func updateMainView () {
+            self.creditsLabel.text = "\(credits)"
+            self.betLabel.text = "\(currentBet)"
+            self.winnerPaidLabel.text = "\(winnings)"
             
         }
     
-    
+        func showAlertWithText (header : String = "Warning", message : String) {
+            //using default alert style. creates UIAlert controller. title is the top warning
+           var alert = UIAlertController(title: header, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+            //way for the user to dismiss the alert - default action
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+            //presents the alert on the screen
+            self.presentViewController(alert, animated: true, completion: nil)
+            
+        }
 
-        
+    
     }
     
 
