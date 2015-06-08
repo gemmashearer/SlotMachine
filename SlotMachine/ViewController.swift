@@ -33,6 +33,10 @@ class ViewController: UIViewController {
     var betMaxButton: UIButton!
     var spinButton: UIButton!
     
+    
+    //giving access to the slots array which holds Slot instances 
+    
+    var slots: [[Slot]] = []
     //this is creating a UIView in code rather than in the storyboard. These constants are global
     //lowercase k means a constant - recognise as a constant
     let kMarginForView:CGFloat = 10.0 //gives a 10 point margin
@@ -80,9 +84,10 @@ class ViewController: UIViewController {
     func betMaxButtonPressed (UIButton) {
     
     }
-    
+     //will get new slots and set up the second container every time the button is pressed
     func spinButtonPressed (UIButton) {
-    
+        slots = Factory.createSlots()
+        setUpSecondContainer(self.secondContainer)
     }
     
     func setUpContainerViews() {
@@ -136,7 +141,22 @@ class ViewController: UIViewController {
         // there are three containers and 3 slots
         for var containerNumber = 0; containerNumber < kNumberOfContainers; ++containerNumber {
             for var slotNumber = 0; slotNumber < kNumberOfSlots; ++slotNumber {
+                //slot returns a slot instance
+                var slot:Slot
+                
                var slotImageView = UIImageView() //this is a local instance not a property
+                //pressing the spin button creates the slot instances
+                if slots.count != 0 { //slots will != 0 when the spin button has been pressed
+                    let slotContainer = slots[containerNumber]
+                slot = slotContainer[slotNumber]
+                    slotImageView.image = slot.image //updates the image view with the image
+
+                }
+                else {
+                    //this will show before the button is pressed
+                    slotImageView.image = UIImage(named: "Ace")
+                }
+                
                 slotImageView.backgroundColor = UIColor.yellowColor()
                 slotImageView.frame = CGRect(x: containerView.bounds.origin.x + (containerView.bounds.size.width * CGFloat(containerNumber) * kThird), y: containerView.bounds.origin.y + (containerView.bounds.size.height * CGFloat(slotNumber) * kThird), width: containerView.bounds.width * kThird - kMarginForSlot, height: containerView.bounds.height * kThird - kMarginForSlot)
                 containerView.addSubview(slotImageView)
